@@ -1,0 +1,88 @@
+.welcome {
+  min-height: 100vh;
+  display: flex;
+  flex-direction: column;
+  background: #171419;
+  color: white;
+}
+
+.welcome-art {
+  position: relative;
+  min-height: 48vh;
+  overflow: hidden;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  background: radial-gradient(circle at 50% 35%, #5B435E 0, #221C25 43%, #171419 72%);
+}
+
+.logo-seal {
+  position: relative;
+  width: 92px;
+  height: 92px;
+  border: 1px solid rgba(255,255,255,.6);
+  border-radius: 28px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-family: Georgia, serif;
+  font-size: 48px;
+  box-shadow: inset 0 0 0 8px rgba(255,255,255,.06), 0 22px 60px rgba(0,0,0,.32);
+}
+
+.seal-star { position: absolute; right: -12px; top: -14px; font-size: 22px; }
+.welcome-wordmark { margin-top: 20px; font-size: 16px; font-weight: 850; letter-spacing: 7px; }
+.welcome-tagline { margin-top: 10px; color: rgba(255,255,255,.6); font-size: 12px; letter-spacing: .7px; }
+.orbit { position: absolute; border: 1px solid rgba(255,255,255,.12); border-radius: 50%; transform: rotate(-20deg); }
+.orbit-one { width: 330px; height: 120px; }
+.orbit-two { width: 240px; height: 330px; transform: rotate(36deg); }
+
+.welcome-bottom {
+  flex: 1;
+  padding: 34px 24px calc(24px + env(safe-area-inset-bottom));
+  border-radius: 32px 32px 0 0;
+  background: #F8F5F0;
+  color: var(--ink);
+}
+
+.welcome-title {
+  margin-top: 9px;
+  white-space: pre-line;
+  font-size: 34px;
+  line-height: 1.12;
+  font-weight: 850;
+  letter-spacing: -1.2px;
+}
+
+.welcome-copy { display: block; margin-top: 14px; color: var(--muted); line-height: 1.65; font-size: 14px; }
+.wechat-button { width: 100%; min-height: 54px; margin-top: 28px; border-radius: 18px; background: #171513; color: white; font-size: 16px; font-weight: 750; }
+.wechat-mark { margin-right: 10px; color: #7FE39A; font-weight: 850; }
+.agreement { display: block; margin-top: 15px; text-align: center; color: #9A938C; font-size: 11px; }
+
+.home-hero { position: relative; height: 425px; overflow: hidden; color: white; border-radius: 0 0 34px 34px; }
+.home-cover-image { position: absolute; inset: 0; width: 100%; height: 100%; }
+.home-hero::after { content: ""; position: absolute; inset: 0; background: linear-gradient(180deg, rgba(17,16,17,.05), rgba(17,16,17,.46)); }
+.home-hero .topbar { position: relative; z-index: 3; }
+.hero-copy { position: absolute; z-index: 3; left: 22px; bottom: 35px; display: flex; flex-direction: column; align-items: flex-start; }
+.hero-copy .eyebrow { color: rgba(255,255,255,.72); }
+.hero-group { margin-top: 7px; font-size: 42px; line-height: 1; font-weight: 900; letter-spacing: -2px; }
+.hero-tagline { margin-top: 10px; color: rgba(255,255,255,.78); font-size: 14px; }
+.switch-group { min-height: 44px; margin-top: 18px; padding: 0 16px; border-radius: 99px; color: white; background: rgba(17,15,18,.35); border: 1px solid rgba(255,255,255,.28); font-size: 13px; font-weight: 700; backdrop-filter: blur(10px); }
+.hero-monogram { position: absolute; z-index: 1; right: -20px; top: 80px; font-family: Georgia, serif; font-size: 270px; line-height: 1; color: rgba(255,255,255,.16); transform: rotate(-8deg); }
+.hero-noise { position: absolute; inset: 0; opacity: .15; background-image: radial-gradient(rgba(255,255,255,.7) .5px, transparent .5px); background-size: 5px 5px; }
+
+.home-content { padding: 20px; }
+.quick-card { min-height: 132px; padding: 20px; display: flex; justify-content: space-between; align-items: center; }
+.quick-title { margin: 5px 0 6px; font-size: 21px; font-weight: 820; }
+.quick-copy { color: var(--muted); font-size: 13px; }
+.quick-arrow { width: 52px; height: 52px; border-radius: 18px; background: var(--ink); color: white; font-size: 22px; }
+.section-head { margin: 30px 2px 16px; display: flex; justify-content: space-between; align-items: flex-end; }
+.trend-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 16px; }
+.trend-item { width: 100%; text-align: left; }
+.trend-art { position: relative; height: 150px; padding: 14px; overflow: hidden; border-radius: 22px; color: white; font-size: 28px; font-weight: 900; letter-spacing: -1px; }
+.trend-cover { position: absolute; inset: 0; width: 100%; height: 100%; }
+.trend-art > text { position: relative; z-index: 2; opacity: 0; }
+.trend-ring { position: absolute; width: 100px; height: 100px; right: -18px; bottom: -18px; border-radius: 50%; border: 17px solid rgba(255,255,255,.22); }
+.trend-name { display: block; margin: 10px 2px 3px; font-size: 15px; font-weight: 780; }
+.trend-count { margin-left: 2px; color: var(--muted); font-size: 12px; }

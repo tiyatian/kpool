@@ -1,0 +1,16 @@
+.notice-header { padding: 26px 22px 22px; }
+.notice-header .title { margin: 7px 0 9px; }
+.notice-header .muted { font-size: 13px; }
+.notice-list { padding: 4px 16px 30px; }
+.today-label { margin: 8px 5px 12px; font-size: 13px; font-weight: 800; }
+.notice-row { min-height: 92px; margin-bottom: 11px; padding: 15px; display: flex; align-items: flex-start; }
+.notice-mark { width: 46px; height: 46px; flex: 0 0 auto; border-radius: 15px; display: flex; align-items: center; justify-content: center; font-size: 18px; font-weight: 850; }
+.notice-mark.green { background: #DDF3E4; color: #2C7D47; }
+.notice-mark.pink { background: #F8DCE7; color: #B33B6B; }
+.notice-mark.blue { background: #DDECF7; color: #346E9C; }
+.notice-mark.sand { background: #EEE4D7; color: #806344; }
+.notice-copy { min-width: 0; flex: 1; margin-left: 13px; }
+.notice-line { display: flex; align-items: center; justify-content: space-between; gap: 10px; }
+.notice-title { font-size: 14px; font-weight: 800; }
+.notice-time { flex: 0 0 auto; color: #9B948D; font-size: 10px; }
+.notice-body { display: block; margin-top: 7px; color: var(--muted); font-size: 12px; line-height: 1.5; }
