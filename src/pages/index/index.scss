@@ -68,11 +68,14 @@
 .hero-copy .eyebrow { color: rgba(255,255,255,.72); }
 .hero-group { margin-top: 7px; font-size: 42px; line-height: 1; font-weight: 900; letter-spacing: -2px; }
 .hero-tagline { margin-top: 10px; color: rgba(255,255,255,.78); font-size: 14px; }
-.switch-group { min-height: 44px; margin-top: 18px; padding: 0 16px; border-radius: 99px; color: white; background: rgba(17,15,18,.35); border: 1px solid rgba(255,255,255,.28); font-size: 13px; font-weight: 700; backdrop-filter: blur(10px); }
+.switch-group { width: auto; min-width: 0; min-height: 38px; margin-top: 16px; padding: 0 14px; border-radius: 12px; color: white; background: rgba(17,15,18,.28); border: 1px solid rgba(255,255,255,.38); font-size: 13px; font-weight: 700; backdrop-filter: blur(12px); box-shadow: 0 8px 22px rgba(12,8,18,.12); }
 .hero-monogram { position: absolute; z-index: 1; right: -20px; top: 80px; font-family: Georgia, serif; font-size: 270px; line-height: 1; color: rgba(255,255,255,.16); transform: rotate(-8deg); }
 .hero-noise { position: absolute; inset: 0; opacity: .15; background-image: radial-gradient(rgba(255,255,255,.7) .5px, transparent .5px); background-size: 5px 5px; }
 
 .home-content { padding: 20px; }
+.desktop-nav, .hero-search-card { display: none; }
+.mobile-search-entry { min-height: 56px; margin-bottom: 16px; padding: 0 16px; display: flex; align-items: center; gap: 12px; border: 1px solid var(--line); border-radius: 18px; background: var(--surface); color: var(--muted); }
+.mobile-search-entry text:nth-child(2) { flex: 1; font-size: 14px; }
 .quick-card { min-height: 132px; padding: 20px; display: flex; justify-content: space-between; align-items: center; }
 .quick-title { margin: 5px 0 6px; font-size: 21px; font-weight: 820; }
 .quick-copy { color: var(--muted); font-size: 13px; }
@@ -84,5 +87,6 @@
 .trend-cover { position: absolute; inset: 0; width: 100%; height: 100%; }
 .trend-art > text { position: relative; z-index: 2; opacity: 0; }
 .trend-ring { position: absolute; width: 100px; height: 100px; right: -18px; bottom: -18px; border-radius: 50%; border: 17px solid rgba(255,255,255,.22); }
+.trend-art .current-group-badge { position: absolute; z-index: 3; top: 10px; left: 10px; padding: 7px 10px; border-radius: 9px; color: #17131b; background: rgba(255,255,255,.9); opacity: 1; font-size: 10px; font-weight: 800; letter-spacing: .5px; }
 .trend-name { display: block; margin: 10px 2px 3px; font-size: 15px; font-weight: 780; }
 .trend-count { margin-left: 2px; color: var(--muted); font-size: 12px; }

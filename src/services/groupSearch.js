@@ -1,8 +1,8 @@
 import Taro from '@tarojs/taro'
 
-const DEEZER_API = 'https://api.deezer.com'
 const ITUNES_API = 'https://itunes.apple.com'
 const WIKIDATA_API = 'https://www.wikidata.org/w/api.php'
+const WIKIPEDIA_API = 'https://en.wikipedia.org/w/api.php'
 
 const palettes = [
   ['#FF8DB8', '#7357E8'],
@@ -20,41 +20,37 @@ const request = async (url, data) => {
   return result.data
 }
 
-const findArtist = async (keyword) => {
-  const payload = await request(`${DEEZER_API}/search/artist`, { q: keyword, limit: 5 })
-  const exact = payload?.data?.find((item) => item.name.toLowerCase() === keyword.toLowerCase())
-  return exact || payload?.data?.[0]
-}
-
-const findAlbums = async (artist, keyword) => {
-  try {
-    const payload = await request(`${DEEZER_API}/artist/${artist.id}/albums`, { limit: 20 })
-    return (payload?.data || [])
-      .sort((a, b) => String(b.release_date || '').localeCompare(String(a.release_date || '')))
-      .slice(0, 8)
-      .map((album) => ({
-        id: String(album.id),
-        name: album.title,
-        era: album.release_date?.slice(0, 4) || 'Release',
-        cover: album.cover_xl || album.cover_big || album.cover_medium,
-        colors: palettes[album.id % palettes.length],
-      }))
-  } catch (error) {
-    const payload = await request(`${ITUNES_API}/search`, {
-      term: `${artist.name || keyword}`,
-      entity: 'album',
-      media: 'music',
-      limit: 12,
-      country: 'KR',
-    })
-    return (payload?.results || []).slice(0, 8).map((album, index) => ({
+const findArtistAndAlbums = async (keyword) => {
+  const payload = await request(`${ITUNES_API}/search`, {
+    term: keyword,
+    entity: 'album',
+    media: 'music',
+    limit: 30,
+    country: 'KR',
+  })
+  const rows = payload?.results || []
+  if (!rows.length) return null
+  const normalized = keyword.toLowerCase().replace(/\s+/g, '')
+  const ranked = [...rows].sort((a, b) => {
+    const aName = String(a.artistName || '').toLowerCase().replace(/\s+/g, '')
+    const bName = String(b.artistName || '').toLowerCase().replace(/\s+/g, '')
+    return Number(bName === normalized) - Number(aName === normalized)
+  })
+  const artistName = ranked[0]?.artistName
+  if (!artistName) return null
+  const albums = ranked
+    .filter((item) => item.artistName === artistName)
+    .sort((a, b) => String(b.releaseDate || '').localeCompare(String(a.releaseDate || '')))
+    .filter((item, index, list) => list.findIndex((candidate) => candidate.collectionName === item.collectionName) === index)
+    .slice(0, 8)
+    .map((album, index) => ({
       id: String(album.collectionId || index),
       name: album.collectionName,
       era: String(album.releaseDate || '').slice(0, 4) || 'Release',
       cover: album.artworkUrl100?.replace('100x100bb', '600x600bb'),
       colors: palettes[index % palettes.length],
     }))
-  }
+  return { id: ranked[0].artistId || artistName, name: artistName, albums }
 }
 
 const findMembers = async (keyword) => {
@@ -101,16 +97,40 @@ const findMembers = async (keyword) => {
   }
 }
 
+const findGroupPhoto = async (keyword) => {
+  try {
+    const payload = await request(WIKIPEDIA_API, {
+      action: 'query',
+      generator: 'search',
+      gsrsearch: `${keyword} K-pop group`,
+      gsrnamespace: 0,
+      gsrlimit: 3,
+      prop: 'pageimages|description',
+      piprop: 'original|thumbnail',
+      pithumbsize: 1200,
+      format: 'json',
+      origin: '*',
+    })
+    const pages = Object.values(payload?.query?.pages || {})
+    const page = pages.find((item) => /group|band|k-pop/i.test(item.description || '')) || pages[0]
+    return page?.original?.source || page?.thumbnail?.source || null
+  } catch (error) {
+    return null
+  }
+}
+
 export async function searchKpopGroup(keyword) {
   const query = keyword.trim()
   if (query.length < 2) return null
 
-  const artist = await findArtist(query)
+  const artist = await findArtistAndAlbums(query)
   if (!artist) return null
 
-  const [albums, members] = await Promise.all([findAlbums(artist, query), findMembers(artist.name)])
-  const colors = palettes[artist.id % palettes.length]
-  const photo = artist.picture_xl || artist.picture_big || artist.picture_medium || albums[0]?.cover
+  const [members, groupPhoto] = await Promise.all([findMembers(artist.name), findGroupPhoto(artist.name)])
+  const albums = artist.albums
+  const paletteIndex = String(artist.id).split('').reduce((sum, char) => sum + char.charCodeAt(0), 0)
+  const colors = palettes[paletteIndex % palettes.length]
+  const photo = groupPhoto || albums[0]?.cover
 
   return {
     id: slugify(artist.name),

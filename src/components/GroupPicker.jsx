@@ -4,7 +4,9 @@ import { getAllGroups, saveDiscoveredGroup } from '../store/session'
 import { searchKpopGroup } from '../services/groupSearch'
 import './GroupPicker.scss'
 
-export default function GroupPicker({ visible, selectedId, required = false, onSelect, onClose }) {
+const POPULAR = ['ENHYPEN', 'LE SSERAFIM', 'NMIXX', 'BABYMONSTER']
+
+export default function GroupPicker({ visible, selectedId, required = false, initialKeyword = '', onSelect, onClose }) {
   const [keyword, setKeyword] = useState('')
   const [remoteGroup, setRemoteGroup] = useState(null)
   const [searching, setSearching] = useState(false)
@@ -17,10 +19,14 @@ export default function GroupPicker({ visible, selectedId, required = false, onS
   }, [keyword, remoteGroup])
 
   useEffect(() => {
+    if (visible && initialKeyword) setKeyword(initialKeyword)
+  }, [visible, initialKeyword])
+
+  useEffect(() => {
     const query = keyword.trim()
     setRemoteGroup(null)
     setSearchError(false)
-    if (query.length < 2) {
+    if (query.length < 2 || allGroups.some((group) => group.name.toLowerCase() === query.toLowerCase())) {
       setSearching(false)
       return undefined
     }
@@ -53,19 +59,33 @@ export default function GroupPicker({ visible, selectedId, required = false, onS
         <View className='picker-handle' />
         <View className='picker-head'>
           <View>
-            <Text className='eyebrow'>CHOOSE YOUR WORLD</Text>
-            <View className='picker-title'>你想先去哪个团？</View>
+            <Text className='eyebrow'>DISCOVER YOUR WORLD</Text>
+            <View className='picker-title'>搜索你的 K-pop 团体</View>
           </View>
           {!required && <Button className='picker-close' onClick={onClose}>×</Button>}
         </View>
         <View className='picker-search'>
-          <Text>⌕</Text>
+          <Text className='search-symbol'>⌕</Text>
           <Input value={keyword} onInput={(event) => setKeyword(event.detail.value)} placeholder='搜索 KPOP 团体' />
+          {keyword && <Button className='clear-search' aria-label='清空搜索' onClick={() => setKeyword('')}>×</Button>}
         </View>
+        {!keyword && (
+          <View className='popular-searches'>
+            <Text>热门搜索</Text>
+            <View className='popular-chips'>
+              {POPULAR.map((name) => <Button key={name} onClick={() => setKeyword(name)}>{name}</Button>)}
+            </View>
+          </View>
+        )}
         <ScrollView scrollY className='picker-list'>
-          {searching && <View className='picker-feedback'>正在识别团体并匹配图片与专辑…</View>}
+          {searching && (
+            <View className='picker-feedback searching-state'>
+              <View className='search-loader' />
+              <Text>正在匹配团体照片、成员与官方专辑…</Text>
+            </View>
+          )}
           {!searching && searchError && groups.length === 0 && (
-            <View className='picker-feedback'>暂时没有匹配到，换个英文团名试试</View>
+            <View className='picker-feedback'>没有找到结果。试试英文全名或常用简称。</View>
           )}
           {groups.map((group) => (
             <Button

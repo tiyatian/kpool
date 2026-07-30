@@ -1,6 +1,6 @@
 import { useEffect, useState } from 'react'
 import Taro, { useDidShow } from '@tarojs/taro'
-import { Button, Image, Text, View } from '@tarojs/components'
+import { Button, Image, Input, Text, View } from '@tarojs/components'
 import GroupPicker from '../../components/GroupPicker'
 import { GROUPS } from '../../data/mock'
 import { finishOnboarding, getSelectedGroup, isOnboarded, selectGroup } from '../../store/session'
@@ -11,6 +11,7 @@ export default function Index() {
   const [picker, setPicker] = useState(false)
   const [onboarded, setOnboarded] = useState(isOnboarded())
   const [loginStep, setLoginStep] = useState(0)
+  const [searchKeyword, setSearchKeyword] = useState('')
 
   useDidShow(() => setGroup(getSelectedGroup()))
   useEffect(() => {
@@ -27,6 +28,13 @@ export default function Index() {
       Taro.showToast({ title: `欢迎来到 ${nextGroup.name}`, icon: 'none' })
     }
   }
+
+  const openSearch = (value = searchKeyword) => {
+    setSearchKeyword(value)
+    setPicker(true)
+  }
+
+  const featuredGroups = [group, ...GROUPS.filter((item) => item.id !== group.id)].slice(0, 4)
 
   if (!onboarded && loginStep < 2) {
     return (
@@ -59,6 +67,15 @@ export default function Index() {
 
   return (
     <View className='page home'>
+      <View className='desktop-nav'>
+        <Text className='desktop-logo'>KPOOL<Text>✦</Text></Text>
+        <View className='desktop-links'>
+          <Text className='is-active'>发现</Text>
+          <Text onClick={() => Taro.switchTab({ url: '/pages/lobby/lobby' })}>拼车大厅</Text>
+          <Text onClick={() => Taro.switchTab({ url: '/pages/profile/profile' })}>我的拼车</Text>
+        </View>
+        <Button className='desktop-profile' onClick={() => Taro.switchTab({ url: '/pages/profile/profile' })}>K</Button>
+      </View>
       <View className='home-hero' style={{ background: `linear-gradient(145deg, ${group.colors[0]}, ${group.colors[1]})` }}>
         <Image className='home-cover-image' src={group.photo} mode='aspectFill' />
         <View className='status-space' />
@@ -68,15 +85,41 @@ export default function Index() {
         </View>
         <View className='hero-noise' />
         <View className='hero-copy'>
-          <Text className='eyebrow'>CURRENT WORLD</Text>
+          <Text className='eyebrow'>NOW BOARDING · CURRENT WORLD</Text>
           <Text className='hero-group'>{group.name}</Text>
           <Text className='hero-tagline'>{group.label}</Text>
           <Button className='switch-group pressable' onClick={() => setPicker(true)}>切换团体　›</Button>
+        </View>
+        <View className='hero-search-card'>
+          <Text className='hero-search-kicker'>FIND YOUR NEXT ERA</Text>
+          <View className='hero-search-title'>搜团、找专辑、<br />马上拼车。</View>
+          <View className='hero-search-box'>
+            <Text>⌕</Text>
+            <Input
+              value={searchKeyword}
+              onInput={(event) => setSearchKeyword(event.detail.value)}
+              onConfirm={() => openSearch()}
+              confirmType='search'
+              placeholder='输入 K-pop 团体名称'
+            />
+            <Button onClick={() => openSearch()}>搜索</Button>
+          </View>
+          <View className='hero-search-hints'>
+            <Text>试试：</Text>
+            {['ENHYPEN', 'NMIXX', 'BABYMONSTER'].map((name) => (
+              <Text key={name} onClick={() => openSearch(name)}>{name}</Text>
+            ))}
+          </View>
         </View>
         <View className='hero-monogram'>{group.name.slice(0, 1)}</View>
       </View>
 
       <View className='home-content'>
+        <View className='mobile-search-entry' onClick={() => openSearch()}>
+          <Text>⌕</Text>
+          <Text>搜索更多 K-pop 团体</Text>
+          <Text>→</Text>
+        </View>
         <View className='quick-card card'>
           <View>
             <Text className='eyebrow'>NEXT DEPARTURE</Text>
@@ -91,12 +134,13 @@ export default function Index() {
           <Text className='muted'>本周</Text>
         </View>
         <View className='trend-grid'>
-          {GROUPS.slice(0, 4).map((item, index) => (
+          {featuredGroups.map((item, index) => (
             <Button key={item.id} className='trend-item pressable' onClick={() => chooseGroup(item)}>
               <View className='trend-art' style={{ background: `linear-gradient(145deg, ${item.colors[0]}, ${item.colors[1]})` }}>
                 <Image className='trend-cover' src={item.photo} mode='aspectFill' lazyLoad />
                 <Text>{item.name.slice(0, 2)}</Text>
                 <View className='trend-ring' />
+                {index === 0 && <Text className='current-group-badge'>当前团体</Text>}
               </View>
               <Text className='trend-name'>{item.name}</Text>
               <Text className='trend-count'>{12 - index * 2} 辆车</Text>
@@ -107,6 +151,7 @@ export default function Index() {
 
       <GroupPicker
         visible={picker}
+        initialKeyword={searchKeyword}
         required={!onboarded}
         selectedId={group.id}
         onClose={() => setPicker(false)}

@@ -70,6 +70,12 @@
   font-size: 16px;
 }
 
+.search-symbol { color: #6f6671; font-size: 21px; }
+.clear-search { width: 34px; height: 34px; border-radius: 10px; color: #6f6671; background: #f1edef; font-size: 19px; }
+.popular-searches { margin: 2px 2px 14px; display: flex; align-items: center; gap: 12px; color: #8a8088; font-size: 12px; }
+.popular-chips { display: flex; flex-wrap: wrap; gap: 7px; }
+.popular-chips button { width: auto; min-height: 32px; padding: 0 11px; border: 1px solid rgba(23,21,19,.1); border-radius: 10px; color: #3c343d; background: #fff; font-size: 11px; }
+
 .picker-list {
   height: calc(76vh - 180px);
 }
@@ -77,9 +83,12 @@
 .picker-feedback {
   padding: 26px 10px;
   color: #857d78;
-  font-size: 24px;
+  font-size: 14px;
   text-align: center;
 }
+
+.searching-state { display: flex; flex-direction: column; align-items: center; gap: 12px; }
+.search-loader { width: 28px; height: 28px; border: 2px solid #e5dfe5; border-top-color: #e94d87; border-radius: 50%; animation: search-spin .75s linear infinite; }
 
 .group-row {
   width: 100%;
@@ -143,3 +152,5 @@
   from { transform: translateY(100%); }
   to { transform: translateY(0); }
 }
+
+@keyframes search-spin { to { transform: rotate(360deg); } }
